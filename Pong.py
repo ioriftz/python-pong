@@ -36,6 +36,12 @@ controllerB = controller("2", 350, 0)
 # "instantiate" the ball
 ball = ball()
 
+# the speed of the ball
+movespeed = 0.1
+movespeedX = movespeed
+movespeedY = movespeed
+
+# move functions
 def move1UP():
     y = controllerA.ycor()
     y += 20
@@ -60,9 +66,40 @@ def move2DOWN():
 window.listen()
 window.onkeypress(move1UP, "w")
 window.onkeypress(move1DOWN, "s")
-window.onkeypress(move2UP, "i")
-window.onkeypress(move2DOWN, "k")
+window.onkeypress(move2UP, "Up")
+window.onkeypress(move2DOWN, "Down")
 
 # loop
 while True:
     window.update()
+
+    # move the ball
+    ball.setx(ball.xcor() + movespeedX)
+    ball.sety(ball.ycor() + movespeedY)
+
+    # ball | border collision checking
+    if(ball.ycor() > 290):
+        ball.sety(290)
+        movespeedY *= -1
+
+    if(ball.ycor() < -290):
+        ball.sety(-290)
+        movespeedY *= -1
+
+    if(ball.xcor() > 390):
+        ball.goto(0,0)
+        movespeedX *= -1
+
+    if(ball.xcor() < -390):
+        ball.goto(0,0)
+        movespeedX *= -1
+
+    # ball | player collision checking
+
+    if ball.xcor() > 340 and ball.ycor() < controllerB.ycor() + 50 and ball.ycor() > controllerB.ycor() - 50:        
+        ball.setx(340)
+        movespeedX *= -1    
+
+    elif ball.xcor() < -340 and ball.ycor() < controllerA.ycor() + 50 and ball.ycor() > controllerA.ycor() - 50:
+        ball.setx(-340)
+        movespeedX *= -1    
