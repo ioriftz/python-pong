@@ -1,6 +1,7 @@
 # based on @TokyoEdTech, but with some modifications that I would do
 
 import turtle
+import os
 
 window = turtle.Screen()
 window.title("Pong")
@@ -37,9 +38,29 @@ controllerB = controller("2", 350, 0)
 ball = ball()
 
 # the speed of the ball
-movespeed = 0.1
+movespeed = 0.2
 movespeedX = movespeed
 movespeedY = movespeed
+
+# score
+scoreA = 0
+scoreB = 0
+
+score = turtle.Turtle()
+score.speed(0)
+score.color("white")
+score.penup()
+score.hideturtle()
+score.goto(0, 260)
+
+# displays the score on the screen
+def displayScore():
+    score.clear()
+    score.write("Player A: "+str(scoreA)+" Player B: "+str(scoreB), align="center", font=("Courier", 24, "normal"))
+displayScore()
+
+def playSound():
+    os.system("aplay touch.wav&")
 
 # move functions
 def move1UP():
@@ -81,25 +102,35 @@ while True:
     if(ball.ycor() > 290):
         ball.sety(290)
         movespeedY *= -1
+        playSound()
 
     if(ball.ycor() < -290):
         ball.sety(-290)
         movespeedY *= -1
+        playSound()
 
     if(ball.xcor() > 390):
         ball.goto(0,0)
         movespeedX *= -1
+        scoreA += 1
+        displayScore()
+        playSound()
 
     if(ball.xcor() < -390):
         ball.goto(0,0)
         movespeedX *= -1
+        scoreB += 1
+        displayScore()
+        playSound()
 
     # ball | player collision checking
 
     if ball.xcor() > 340 and ball.ycor() < controllerB.ycor() + 50 and ball.ycor() > controllerB.ycor() - 50:        
         ball.setx(340)
-        movespeedX *= -1    
+        movespeedX *= -1   
+        playSound() 
 
     elif ball.xcor() < -340 and ball.ycor() < controllerA.ycor() + 50 and ball.ycor() > controllerA.ycor() - 50:
         ball.setx(-340)
         movespeedX *= -1    
+        playSound()
